@@ -78,6 +78,8 @@ mean_delay_country <- ufo7 %>%
   summarise(mean_delay = mean(report_delay)) %>% 
   filter(!is.na(country))
 
+View(mean_delay_country)
+
 # Check for outliers using boxplot 
 boxplot(ufo7$duration.seconds)
 
