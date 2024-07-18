@@ -29,16 +29,18 @@ class(ufo2$date)
 
 # Create two new columns for both hours and minutes
 # to standardize units 
+# Move new columns after duration.seconds
 ufo3 <- ufo2 %>%
   mutate(duration.hours = round(duration.seconds / 3600, 2),
          duration.mins = round(duration.seconds / 60, 2)) %>% 
   relocate(c(duration.mins, duration.hours), .after = duration.seconds)
 
-# Specify select() from dplyr and remove duration.hours.min column
+# Specify select() function from dplyr and remove duration.hours.min column
 ufo3 <- dplyr::select(ufo3, -duration.hours.min)
 
 # Inspect column to see if there's any inconsistency with date formatting
 table(ufo3$date_posted)
+# Check for NAs in the column
 sum(is.na(ufo3$date_posted))
 
 # Convert dates to YYMMDD format, quiet = TRUE deals with errors to parse silently
@@ -53,7 +55,9 @@ ufo4 <- ufo3 %>%
 # country column instead if it's blank for Canadian cities
 ufo5 <- ufo4 %>%
   mutate(
-    # Remove anything in brackets after city name
+    # Search for cities that contain a bracket and characters inside of it
+    # If so, remove the bracket and substitute with nothing
+    # If no bracket, keep the city name the way it is 
     city = ifelse(grepl("\\(.*\\)", city), sub("\\s*\\(.*\\)", "", city), city),
     # Update country to CA if city contains (canada)
     country = ifelse(grepl("\\(canada\\)", city, ignore.case = TRUE) & country != "ca", "ca", country))
@@ -70,7 +74,7 @@ ufo7 <- ufo6 %>%
   # date was after the date of sighting
   filter(report_delay > 0)
 
-# Average report delay per country 
+# Create table for average report_delay per country 
 # Convert blank entries to NA, remove NA from table
 mean_delay_country <- ufo7 %>% 
   mutate(country = ifelse(country == "", NA, country)) %>% 
@@ -102,3 +106,4 @@ hist(ufo_filtered$duration.seconds,
      xlab = "Duration (seconds)",
      ylab = "Frequency",
      col = "aquamarine")
+
