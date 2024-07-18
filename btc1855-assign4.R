@@ -56,7 +56,7 @@ missing_country_rows <- ufo4 %>%
   filter(is.na(country) | country == "") %>%
   filter(grepl("\\(.*\\)", city))
 
-# I will focus on cleaning up rows with (canada) as there are too many rows with
+# I will only focus on cleaning up rows with (canada) as there are too many rows with
 # inconsistent observations within the brackets
 # Remove the country name inside brackets in the city column and place "ca" in 
 # country column instead if it's blank for Canadian cities
@@ -72,7 +72,7 @@ ufo5 <- ufo4 %>%
 # Remove sightings that are hoaxes using key words indicating a hoax
 # tolower() converts all characters to lower case 
 ufo6 <- ufo5 %>%
-  filter(!grepl("hoax|fake|prank|not real|joke|trick|spoof", tolower(comments)))
+  filter(!grepl("hoax|fake|not real|joke|trick|spoof|prank", tolower(comments)))
 
 # Create report_delay column and compute time difference in days
 ufo7 <- ufo6 %>%
