@@ -56,8 +56,8 @@ ufo4 <- ufo3 %>%
 ufo5 <- ufo4 %>%
   mutate(
     # Search for cities that contain a bracket and characters inside of it
-    # If so, remove the bracket and substitute with nothing
-    # If no bracket, keep the city name the way it is 
+    # If TRUE, remove the bracket and substitute with nothing
+    # If FALSE, keep the city name the way it is 
     city = ifelse(grepl("\\(.*\\)", city), sub("\\s*\\(.*\\)", "", city), city),
     # Update country to CA if city contains (canada)
     country = ifelse(grepl("\\(canada\\)", city, ignore.case = TRUE) & country != "ca", "ca", country))
