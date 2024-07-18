@@ -51,16 +51,23 @@ ufo4 <- ufo3 %>%
                          format(dmy(date.posted, "%d-%m-%Y", quiet = TRUE), "%Y-%m-%d"), 
                          NA_character_))
 
+# Identify rows where the country column is missing or empty
+missing_country_rows <- ufo4 %>%
+  filter(is.na(country) | country == "") %>%
+  filter(grepl("\\(.*\\)", city))
+
+# I will focus on cleaning up rows with (canada) as there are too many rows with
+# inconsistent observations within the brackets
 # Remove the country name inside brackets in the city column and place "ca" in 
 # country column instead if it's blank for Canadian cities
 ufo5 <- ufo4 %>%
   mutate(
+    # Update country to CA if city contains (canada)
+    country = ifelse(grepl("\\(canada\\)", city, ignore.case = TRUE) & country != "ca", "ca", country),
     # Search for cities that contain a bracket and characters inside of it
     # If TRUE, remove the bracket and substitute with nothing
     # If FALSE, keep the city name the way it is 
-    city = ifelse(grepl("\\(.*\\)", city), sub("\\s*\\(.*\\)", "", city), city),
-    # Update country to CA if city contains (canada)
-    country = ifelse(grepl("\\(canada\\)", city, ignore.case = TRUE) & country != "ca", "ca", country))
+    city = ifelse(grepl("\\(.*\\)", city), sub("\\s*\\(.*\\)", "", city), city))
 
 # Remove sightings that are hoaxes using key words indicating a hoax
 # tolower() converts all characters to lower case 
