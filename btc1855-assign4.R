@@ -56,6 +56,8 @@ missing_country_rows <- ufo4 %>%
   filter(is.na(country) | country == "") %>%
   filter(grepl("\\(.*\\)", city))
 
+View(missing_country_rows)
+
 canadian_provinces <- c("ab", "bc", "mb", "nb", "nl", "nt", "ns", "nu", "on", "pe", "qc", "sk", "yt")
 us_states <- c("al", "ak", "az", "ar", "ca", "co", "ct", "de", "fl", "ga", "hi", 
                      "id", "il", "in", "ia", "ks", "ky", "la", "me", "md", "ma", "mi", "mn", 
@@ -63,7 +65,7 @@ us_states <- c("al", "ak", "az", "ar", "ca", "co", "ct", "de", "fl", "ga", "hi",
                      "ok", "or", "pa", "ri", "sc", "sd", "tn", "tx", "ut", "vt", "va", "wa", 
                      "wv", "wi", "wy")
 
-
+# Cleaning up the city and country column
 # I will only focus on cleaning up re-organizing Canadian and American sightings as it takes up
 # majority of the observations
 ufo5 <- ufo4 %>%
@@ -77,7 +79,12 @@ ufo5 <- ufo4 %>%
     # Search for cities that contain a bracket and characters inside of it
     # If TRUE, remove the bracket and substitute with nothing
     # If FALSE, keep the city name the way it is 
-    city = ifelse(grepl("\\(.*\\)", city), sub("\\s*\\(.*\\)", "", city), city))
+    city = ifelse(grepl("\\(.*\\)", city), sub("\\s*\\(.*\\)", "", city), city)) %>% 
+    # Replace blank entries with "other" so we have a broad category of countries that have less entries
+    mutate(country = ifelse(country == "", "other", country))  %>% 
+    # Replace blank entries in state and shape with "unknown"
+    mutate(state = ifelse(state == "", "unknown", state))  %>% 
+    mutate(shape = ifelse(shape == "", "unknown", shape))
 
 # Remove rows that are hoaxes using key words indicating a hoax
 # tolower() converts all characters to lower case 
@@ -94,11 +101,11 @@ ufo7 <- ufo6 %>%
 # Create table for average report_delay per country 
 # Convert blank entries to "other"
 mean_delay_country <- ufo7 %>% 
-  mutate(country = ifelse(country == "", "other", country)) %>% 
+  
   group_by(country) %>% 
   summarise(mean_delay = mean(report_delay)) %>% 
   # Place other at the end
-  # All false entries are less than true (other) values, so they will come first
+  # All FALSE entries (non-other) are less than TRUE (other) values, so they will come first
   arrange(country == "other", country)
 
 View(mean_delay_country)
