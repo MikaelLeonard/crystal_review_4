@@ -47,6 +47,8 @@ sum(is.na(ufo3$date_posted))
 ufo4 <- ufo3 %>%
   rename(date.posted = date_posted) %>%
   mutate(
+    # If the format is TRUE, convert it to %Y-%m-%d
+    # If FALSE, keep it to NA character
     date.posted = ifelse(!is.na(date.posted), 
                          format(dmy(date.posted, "%d-%m-%Y", quiet = TRUE), "%Y-%m-%d"), 
                          NA_character_))
