@@ -51,7 +51,7 @@ ufo4 <- ufo3 %>%
                          format(dmy(date.posted, "%d-%m-%Y", quiet = TRUE), "%Y-%m-%d"), 
                          NA_character_))
 
-# Identify rows where the country column is missing or empty
+# Inspect rows where the country column is missing or empty
 missing_country_rows <- ufo4 %>%
   filter(is.na(country) | country == "") %>%
   filter(grepl("\\(.*\\)", city))
@@ -63,8 +63,7 @@ View(missing_country_rows)
 missing_summary <- ufo4 %>%
   summarise_all(list(
     blanks = ~ sum(. == "", na.rm = TRUE),
-    nas = ~ sum(is.na(.), na.rm = TRUE)
-  ))
+    nas = ~ sum(is.na(.), na.rm = TRUE)))
 
 View(missing_summary)
 
