@@ -27,7 +27,7 @@ any(duplicated(ufo))
 # Separate date and time from datetime column
 ufo2 <- ufo %>% separate(datetime, c('date', 'time'), sep = " ")
 
-# Change "date" into date class
+# Change "date" into Date class
 ufo2$date <- ymd(ufo2$date)
 class(ufo2$date)
 
