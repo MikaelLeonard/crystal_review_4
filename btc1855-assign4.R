@@ -119,7 +119,6 @@ ufo7 <- ufo6 %>%
   filter(report_delay > 0)
 
 # Create table for average report_delay per country 
-# Convert blank entries to "other"
 mean_delay_country <- ufo7 %>% 
   group_by(country) %>% 
   summarise("mean_delay (days)" = mean(report_delay)) %>% 
