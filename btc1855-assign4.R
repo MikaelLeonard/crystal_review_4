@@ -43,7 +43,7 @@ table(ufo3$date_posted)
 # Check for NAs in the column
 sum(is.na(ufo3$date_posted))
 
-# Convert dates to YY-MM-DD format, quiet = TRUE deals with errors to parse silently
+# Convert dates to YY-MM-DD format, quiet = TRUE deals with warnings and errors quietly
 ufo4 <- ufo3 %>%
   rename(date.posted = date_posted) %>%
   mutate(
