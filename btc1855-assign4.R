@@ -67,6 +67,7 @@ missing_summary <- ufo4 %>%
 
 View(missing_summary)
 
+# Create vectors for Canadian provinces and American states
 canadian_provinces <- c("ab", "bc", "mb", "nb", "nl", "nt", "ns", "nu", "on", "pe", "qc", "sk", "yt")
 us_states <- c("al", "ak", "az", "ar", "ca", "co", "ct", "de", "fl", "ga", "hi", 
                      "id", "il", "in", "ia", "ks", "ky", "la", "me", "md", "ma", "mi", "mn", 
@@ -88,12 +89,15 @@ ufo5 <- ufo4 %>%
     # Search for cities that contain a bracket and characters inside of it
     # If TRUE, remove the bracket and substitute with nothing
     # If FALSE, keep the city name the way it is 
-    city = ifelse(grepl("\\(.*\\)", city), sub("\\s*\\(.*\\)", "", city), city)) %>% 
+    city = ifelse(grepl("\\(.*\\)", city), sub("\\s*\\(.*\\)", "", city), city),
     # Replace blank entries with "other" so we have a broad category of countries that have less entries
-    mutate(country = ifelse(country == "", "other", country))  %>% 
+    country = ifelse(country == "", "other", country),
     # Replace blank entries in state and shape with "unknown"
-    mutate(state = ifelse(state == "", "unknown", state))  %>% 
-    mutate(shape = ifelse(shape == "", "unknown", shape))
+    state = ifelse(state == "", "unknown", state),
+    shape = ifelse(shape == "", "unknown", shape)
+    ) %>% 
+    # Region is a broader term that includes other countries that aren't the US
+    rename(region = state)
 
 # Remove rows that are hoaxes using key words indicating a hoax
 # tolower() converts all characters to lower case 
