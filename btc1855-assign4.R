@@ -101,7 +101,7 @@ ufo5 <- ufo4 %>%
     # Region is a broader term that includes other countries that aren't the US
     rename(region = state)
 
-# Remove rows that are hoaxes using key words indicating a hoax but keep "not a hoax"
+# Keep rows that do not contain hoax indicator words and keep rows with "not a hoax"
 # tolower() converts all characters to lower case 
 ufo6 <- ufo5 %>%
   filter(grepl("not a hoax", tolower(comments)) | 
