@@ -8,7 +8,7 @@ library(lubridate)
 
 setwd("~/Desktop/UTM/BTC1855/btc1855-assign4")
 
-# Read the .csv file as a dataframe
+# Read the .csv file and assign data frame
 ufo <- read.csv("ufo_subset.csv")
 
 # Verify that ufo is a data.frame
