@@ -43,7 +43,7 @@ table(ufo3$date_posted)
 # Check for NAs in the column
 sum(is.na(ufo3$date_posted))
 
-# Convert dates to YYMMDD format, quiet = TRUE deals with errors to parse silently
+# Convert dates to YY-MM-DD format, quiet = TRUE deals with errors to parse silently
 ufo4 <- ufo3 %>%
   rename(date.posted = date_posted) %>%
   mutate(
@@ -56,20 +56,30 @@ missing_country_rows <- ufo4 %>%
   filter(is.na(country) | country == "") %>%
   filter(grepl("\\(.*\\)", city))
 
-# I will only focus on cleaning up rows with (canada) as there are too many rows with
-# inconsistent observations within the brackets
-# Remove the country name inside brackets in the city column and place "ca" in 
-# country column instead if it's blank for Canadian cities
+canadian_provinces <- c("ab", "bc", "mb", "nb", "nl", "nt", "ns", "nu", "on", "pe", "qc", "sk", "yt")
+us_states <- c("al", "ak", "az", "ar", "ca", "co", "ct", "de", "fl", "ga", "hi", 
+                     "id", "il", "in", "ia", "ks", "ky", "la", "me", "md", "ma", "mi", "mn", 
+                     "ms", "mo", "mt", "ne", "nv", "nh", "nj", "nm", "ny", "nc", "nd", "oh", 
+                     "ok", "or", "pa", "ri", "sc", "sd", "tn", "tx", "ut", "vt", "va", "wa", 
+                     "wv", "wi", "wy")
+
+
+# I will only focus on cleaning up re-organizing Canadian and American sightings as it takes up
+# majority of the observations
 ufo5 <- ufo4 %>%
   mutate(
-    # Update country to CA if city contains (canada)
+    # Update country to ca if the state contains any Canadian province abbreviation and country is blank
+    country = ifelse(country == "" & tolower(state) %in% canadian_provinces, "ca", country),
+    # Update country to us if state contains any American state abbreviation and country is blank
+    country = ifelse(country == "" & tolower(state) %in% us_states, "us", country),
+    # Update country to ca if city contains (canada)
     country = ifelse(grepl("\\(canada\\)", city, ignore.case = TRUE) & country != "ca", "ca", country),
     # Search for cities that contain a bracket and characters inside of it
     # If TRUE, remove the bracket and substitute with nothing
     # If FALSE, keep the city name the way it is 
     city = ifelse(grepl("\\(.*\\)", city), sub("\\s*\\(.*\\)", "", city), city))
 
-# Remove sightings that are hoaxes using key words indicating a hoax
+# Remove rows that are hoaxes using key words indicating a hoax
 # tolower() converts all characters to lower case 
 ufo6 <- ufo5 %>%
   filter(!grepl("hoax|fake|not real|joke|trick|spoof|prank", tolower(comments)))
@@ -82,12 +92,14 @@ ufo7 <- ufo6 %>%
   filter(report_delay > 0)
 
 # Create table for average report_delay per country 
-# Convert blank entries to NA, remove NA from table
+# Convert blank entries to "other"
 mean_delay_country <- ufo7 %>% 
-  mutate(country = ifelse(country == "", NA, country)) %>% 
+  mutate(country = ifelse(country == "", "other", country)) %>% 
   group_by(country) %>% 
   summarise(mean_delay = mean(report_delay)) %>% 
-  filter(!is.na(country))
+  # Place other at the end
+  # All false entries are less than true (other) values, so they will come first
+  arrange(country == "other", country)
 
 View(mean_delay_country)
 
