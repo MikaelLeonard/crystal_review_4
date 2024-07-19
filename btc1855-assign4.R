@@ -101,10 +101,11 @@ ufo5 <- ufo4 %>%
     # Region is a broader term that includes other countries that aren't the US
     rename(region = state)
 
-# Remove rows that are hoaxes using key words indicating a hoax
+# Remove rows that are hoaxes using key words indicating a hoax but keep "not a hoax"
 # tolower() converts all characters to lower case 
 ufo6 <- ufo5 %>%
-  filter(!grepl("hoax|fake|not real|joke|trick|spoof|prank", tolower(comments)))
+  filter(grepl("not a hoax", tolower(comments)) | 
+           !grepl("hoax|fake|not real|joke|trick|spoof|prank", tolower(comments)))
 
 # Create report_delay column and compute time difference in days
 ufo7 <- ufo6 %>%
