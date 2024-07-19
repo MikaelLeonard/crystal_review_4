@@ -58,6 +58,16 @@ missing_country_rows <- ufo4 %>%
 
 View(missing_country_rows)
 
+# See how many blank or NA entries each column contains
+# There are no NAs but blanks in state, country, and, shape
+missing_summary <- ufo4 %>%
+  summarise_all(list(
+    blanks = ~ sum(. == "", na.rm = TRUE),
+    nas = ~ sum(is.na(.), na.rm = TRUE)
+  ))
+
+View(missing_summary)
+
 canadian_provinces <- c("ab", "bc", "mb", "nb", "nl", "nt", "ns", "nu", "on", "pe", "qc", "sk", "yt")
 us_states <- c("al", "ak", "az", "ar", "ca", "co", "ct", "de", "fl", "ga", "hi", 
                      "id", "il", "in", "ia", "ks", "ky", "la", "me", "md", "ma", "mi", "mn", 
@@ -65,8 +75,8 @@ us_states <- c("al", "ak", "az", "ar", "ca", "co", "ct", "de", "fl", "ga", "hi",
                      "ok", "or", "pa", "ri", "sc", "sd", "tn", "tx", "ut", "vt", "va", "wa", 
                      "wv", "wi", "wy")
 
-# Cleaning up the city and country column
-# I will only focus on cleaning up re-organizing Canadian and American sightings as it takes up
+# Cleaning up the city and country column, deal with blank entries
+# I will focus on cleaning up and re-organizing Canadian and American sightings as it takes up
 # majority of the observations
 ufo5 <- ufo4 %>%
   mutate(
