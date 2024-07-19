@@ -101,9 +101,8 @@ ufo7 <- ufo6 %>%
 # Create table for average report_delay per country 
 # Convert blank entries to "other"
 mean_delay_country <- ufo7 %>% 
-  
   group_by(country) %>% 
-  summarise(mean_delay = mean(report_delay)) %>% 
+  summarise("mean_delay (days)" = mean(report_delay)) %>% 
   # Place other at the end
   # All FALSE entries (non-other) are less than TRUE (other) values, so they will come first
   arrange(country == "other", country)
