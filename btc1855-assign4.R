@@ -11,6 +11,9 @@ setwd("~/Desktop/UTM/BTC1855/btc1855-assign4")
 # Read the .csv file as a dataframe
 ufo <- as.data.frame(read.csv("ufo_subset.csv"))
 
+# Check for duplicate entries
+any(duplicated(ufo))
+
 # Verify that ufo is a data.frame
 class(ufo)
 
