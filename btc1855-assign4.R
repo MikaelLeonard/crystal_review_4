@@ -56,6 +56,8 @@ table(ufo3$date_posted)
 # Check for NAs in the column
 sum(is.na(ufo3$date_posted))
 
+## MG: Great use of the quiet = T so it doesn't show the waring messages
+## MG: I like that you keep the column names consistent across the variables. Great attention to detail!
 # Convert dates to YY-MM-DD format, quiet = TRUE deals with warnings and errors quietly
 ufo4 <- ufo3 %>%
   rename(date.posted = date_posted) %>%
@@ -69,6 +71,7 @@ ufo4 <- ufo3 %>%
 # Inspect rows where the country column is missing or empty
 missing_country_rows <- ufo4 %>%
   filter(is.na(country) | country == "") %>%
+  ## MG: I think this line below is unecessary
   filter(grepl("\\(.*\\)", city))
 
 View(missing_country_rows)
