@@ -25,23 +25,32 @@ str(ufo)
 any(duplicated(ufo))
 
 # Separate date and time from datetime column
+## MG: Good that you separate the datetime column into date and time!
+## MG: I also like that you keep the originial copy of the ufo dataset
 ufo2 <- ufo %>% separate(datetime, c('date', 'time'), sep = " ")
 
 # Change "date" into Date class
+## MG: Great use of the lubridate ymd() function!
 ufo2$date <- ymd(ufo2$date)
 class(ufo2$date)
 
 # Create two new columns for both hours and minutes
 # to standardize units 
 # Move new columns after duration.seconds
+## MG:I like that you create new columns for the duration hours and minutes and also you remove
+##    the duration.hours.min column afterwards. Removing them is also a good idea beacuse they
+##    are not standardized.
 ufo3 <- ufo2 %>%
   mutate(duration.hours = round(duration.seconds / 3600, 2),
          duration.mins = round(duration.seconds / 60, 2)) %>% 
   relocate(c(duration.mins, duration.hours), .after = duration.seconds)
 
 # Specify select() function from dplyr and remove duration.hours.min column
+## MG:Nice use of the select function from the dplyr package! I think that because you
+##    previously load the dply package (in line 5), you don't need to do use dplyr:: again
 ufo3 <- dplyr::select(ufo3, -duration.hours.min)
 
+## MG:Its interesting that you use the table function to check for inconsistency!
 # Inspect column to see if there's any inconsistency with date formatting
 table(ufo3$date_posted)
 # Check for NAs in the column
