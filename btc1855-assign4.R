@@ -2,6 +2,7 @@
 # ASSIGNMENT 4 - MARTIANS
 # CRYSTAL LEE
 
+## MG: Overall you did a very great job! The code works and is very detailed. The comments are also very descriptive!
 library(dplyr)
 library(tidyr)
 library(lubridate)
@@ -148,6 +149,7 @@ View(mean_delay_country)
 boxplot(ufo7$duration.seconds)
 
 # Define quantiles 
+## MG: Great job in jusing the IQR to define the limits!
 Q1 <- quantile(ufo7$duration.seconds, 0.25)
 Q3 <- quantile(ufo7$duration.seconds, 0.75)
 IQR <- Q3 - Q1
