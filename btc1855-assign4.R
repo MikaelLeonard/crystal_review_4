@@ -96,6 +96,8 @@ us_states <- c("al", "ak", "az", "ar", "ca", "co", "ct", "de", "fl", "ga", "hi",
 # Cleaning up the city and country column, deal with blank entries
 # I will focus on cleaning up and re-organizing Canadian and American sightings as it takes up
 # majority of the observations
+## MG: wow! This is very detailed! Great job!!! I really like how you have the "other" country category for 
+##     those not in the specified countries
 ufo5 <- ufo4 %>%
   mutate(
     # Update country to ca if the state contains any Canadian province abbreviation and country is blank
@@ -119,6 +121,8 @@ ufo5 <- ufo4 %>%
 
 # Keep rows that do not contain hoax indicator words and keep rows with "not a hoax"
 # tolower() converts all characters to lower case 
+## MG: I think you should also consider that some of the comments with "NUFORC note" can be hoax as
+##     it report sightings of objects that might be a real object (not ufo)
 ufo6 <- ufo5 %>%
   filter(grepl("not a hoax", tolower(comments)) | 
            !grepl("hoax|fake|not real|joke|trick|spoof|prank", tolower(comments)))
